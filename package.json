@@ -1,0 +1,15 @@
+{
+  "name": "social-media-dashboard",
+  "version": "1.0.0",
+  "description": "Frontend Mentor - Social Media Dashboard with Theme Switcher",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --open",
+    "build": "vite build",
+    "preview": "vite preview --open"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
