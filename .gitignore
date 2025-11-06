@@ -1,20 +1,22 @@
-# Dependencies
+# Node & locks
 node_modules/
-pnpm-lock.yaml
+npm-debug.log*
 yarn.lock
+pnpm-lock.yaml
 package-lock.json
 
-# Builds
-dist/
+# Vite/Builds
+client/dist/
 
-# OS junk
+# OS/editor
 .DS_Store
 Thumbs.db
-
-# Editor
 .vscode/
 .idea/
 
-# Optional: ignore design references if you still have them
+# Data backups (we keep server/db.json tracked)
+server/db.backup.json
+
+# Optional: reference assets
 design/
 other/

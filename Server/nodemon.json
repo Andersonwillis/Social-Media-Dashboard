@@ -1,0 +1,5 @@
+{
+  "watch": ["index.js", "db.js"],
+  "ext": "js,mjs,json",
+  "ignore": ["db.json", "../client/**", "../images/**"]
+}

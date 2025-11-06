@@ -126,9 +126,7 @@ body.theme-auto.theme-dark-active .switch::after { left: calc(100% - 25px); back
 .card[data-brand="youtube"]  { color: var(--youtube); }
 
 /* Overview */
-.card--overview {
-  display: grid; grid-template-columns: 1fr auto; gap: .5rem; align-items: center;
-}
+.card--overview { display: grid; grid-template-columns: 1fr auto; gap: .5rem; align-items: center; }
 .metric { color: var(--muted); font-weight: 700; }
 .value { font-size: 2rem; font-weight: 700; line-height: 1; }
 .delta { justify-self: end; display: flex; align-items: center; gap: .35rem; font-weight: 700; }
@@ -144,7 +142,9 @@ body.theme-auto.theme-dark-active .switch::after { left: calc(100% - 25px); back
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
-}/* ========= Tokens ========= */
+}
+
+/* End of stylesheet */
 :root {
   --green-500: hsl(163,72%,41%);
   --red-500: hsl(356,69%,56%);
