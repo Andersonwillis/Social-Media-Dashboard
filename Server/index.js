@@ -6,6 +6,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Simple request logger to help debug which paths the client requests
+app.use((req, _res, next) => {
+  const now = new Date().toISOString();
+  // log basic request immediately
+  console.log(`[${now}] ${req.method} ${req.path}`);
+  // also log response status and content-type when the response finishes
+  const start = Date.now();
+  const res = _res;
+  res.on('finish', () => {
+    const ms = Date.now() - start;
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} -> ${res.statusCode} ${res.get('Content-Type') || ''} (${ms}ms)`);
+  });
+  next();
+});
+
 // Health
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 

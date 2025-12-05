@@ -91,3 +91,98 @@ We love receiving feedback! We're always looking to improve our challenges and o
 This challenge is completely free. Please share it with anyone who will find it useful for practice.
 
 **Have fun building!** 🚀
+<!--
+	README for the student project: Social Media Dashboard with Theme Switcher
+	Replaced the original Frontend Mentor starter README with a project-specific README
+-->
+
+# Social Media Dashboard with Theme Switcher
+
+This repository contains a small React (Vite) frontend and an Express prototype backend that serves a lowdb JSON database. The app is a Frontend Mentor coding challenge implementation that shows social media follower counts and overview metrics with a light/dark theme toggle.
+
+Live preview: (this is a local project — run it locally; see "Run locally" below)
+
+Key features
+- React + Vite frontend
+- Express backend (Node) with lowdb JSON datastore
+- Theme switch (light / dark)
+- Dashboard cards for followers and overview stats
+
+Project structure
+
+```
+/
+	Client/                # Vite React app
+		src/
+			components/       # UI components (Header, FollowerCard, OverviewCard, ThemeToggle)
+			App.jsx
+			main.jsx
+			styles.css
+		package.json
+	Server/                # Prototype API
+		index.js             # Express routes: /api/followers, /api/overview, /api/total-followers
+		db.js                # lowdb initialization
+		db.json              # sample data
+		package.json
+	images/                # assets
+	README-template.md
+	README.md              # this file
+```
+
+Requirements
+- Node.js 16+ (recommended 18+)
+
+Run locally (development)
+
+1) Start the backend API
+
+```bash
+cd Server
+npm install
+npm run dev    # starts nodemon -> node index.js
+```
+
+You should see: "API running on http://localhost:5174"
+
+Quick API checks
+
+```bash
+curl -i http://localhost:5174/
+curl -i http://localhost:5174/api/overview
+curl -i http://localhost:5174/api/followers
+curl -i http://localhost:5174/api/total-followers
+```
+
+2) Start the client
+
+```bash
+cd Client
+npm install
+npm run dev    # starts Vite dev server (default port 5173)
+```
+
+Open the app in your browser at the Vite URL (usually http://localhost:5173).
+
+Notes on development
+- The client uses `VITE_API_BASE` to configure the API base URL. For local development the project provides `Client/.env` with `VITE_API_BASE=/api` and a Vite proxy in `Client/vite.config.js` that forwards `/api/*` to `http://localhost:5174`.
+- If you change environment variables or Vite config, restart the Vite dev server so the new config takes effect.
+- If you see proxy errors like `ECONNREFUSED` in the Vite terminal, make sure the backend is started and listening on port 5174.
+
+Testing & debugging
+- Server logs incoming requests (timestamp, method, path, status and Content-Type) to help debug API calls.
+- Client API helpers (Client/src/api.js) check `Content-Type` and will throw detailed errors if the API returns non-JSON responses.
+
+Git & deployment
+- This project is intended to be submitted from a feature/dev branch (for example `dev-malachi`). Make sure your branch is pushed to a public GitHub repo for submission.
+- To deploy the client, build the Vite app (`npm run build` in `Client`) and host the `dist/` output on Vercel, Netlify, or GitHub Pages. The backend can be deployed to platforms that support Node (Heroku, Render, Railway). For production, replace lowdb with a proper database and secure environment variables.
+
+What to improve (suggestions)
+- Add an About route and navigation if you want multiple pages.
+- Add authentication or a real database for a production-ready backend.
+- Add unit tests and a CI workflow if you want a stronger submission.
+
+Contact / Author
+- Project coded by Malachi Anderson & Evan Bellig (as provided in the challenge template).
+
+License
+- This project is provided as-is for the Frontend Mentor challenge.
