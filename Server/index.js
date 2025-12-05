@@ -50,6 +50,11 @@ app.get('/api/total-followers', async (_req, res) => {
   res.json({ total });
 });
 
+// Simple root handler to avoid browser "Cannot GET /" confusion during development
+app.get('/', (_req, res) => {
+  res.json({ ok: true, message: 'API running. Use /api/* endpoints.' });
+});
+
 const PORT = process.env.PORT || 5174;
 initDB().then(() => {
   app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));

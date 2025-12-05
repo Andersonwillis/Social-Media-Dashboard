@@ -1,18 +1,106 @@
 {
   "followers": [
-    { "id": "fb", "brand": "facebook",  "handle": "@nathanf",     "label": "Followers",   "count": 1987,  "deltaDirection": "up",   "deltaValue": 12 },
-    { "id": "tw", "brand": "twitter",   "handle": "@nathanf",     "label": "Followers",   "count": 1044,  "deltaDirection": "up",   "deltaValue": 99 },
-    { "id": "ig", "brand": "instagram", "handle": "@realnathanf", "label": "Followers",   "count": 11000, "deltaDirection": "up",   "deltaValue": 1099 },
-    { "id": "yt", "brand": "youtube",   "displayName": "Nathan F.","label": "Subscribers","count": 8239,  "deltaDirection": "down", "deltaValue": 144 }
+    {
+      "id": "fb",
+      "brand": "facebook",
+      "handle": "@nathanf",
+      "label": "Followers",
+      "count": 1987,
+      "deltaDirection": "up",
+      "deltaValue": 12
+    },
+    {
+      "id": "tw",
+      "brand": "twitter",
+      "handle": "@nathanf",
+      "label": "Followers",
+      "count": 1044,
+      "deltaDirection": "up",
+      "deltaValue": 99
+    },
+    {
+      "id": "ig",
+      "brand": "instagram",
+      "handle": "@realnathanf",
+      "label": "Followers",
+      "count": 11000,
+      "deltaDirection": "up",
+      "deltaValue": 1099
+    },
+    {
+      "id": "yt",
+      "brand": "youtube",
+      "displayName": "Nathan F.",
+      "label": "Subscribers",
+      "count": 8239,
+      "deltaDirection": "down",
+      "deltaValue": 144
+    }
   ],
   "overview": [
-    { "id": "fb-views", "brand": "facebook",  "metric": "Page Views",    "value": 87,   "deltaDirection": "down", "deltaPercent": 3 },
-    { "id": "fb-likes", "brand": "facebook",  "metric": "Likes",         "value": 52,   "deltaDirection": "down", "deltaPercent": 2 },
-    { "id": "ig-likes", "brand": "instagram", "metric": "Likes",         "value": 5462, "deltaDirection": "up",   "deltaPercent": 2257 },
-    { "id": "ig-prof",  "brand": "instagram", "metric": "Profile Views", "value": 52000,"deltaDirection": "up",   "deltaPercent": 1375 },
-    { "id": "tw-rt",    "brand": "twitter",   "metric": "Retweets",      "value": 117,  "deltaDirection": "up",   "deltaPercent": 303 },
-    { "id": "tw-likes", "brand": "twitter",   "metric": "Likes",         "value": 507,  "deltaDirection": "up",   "deltaPercent": 553 },
-    { "id": "yt-likes", "brand": "youtube",   "metric": "Likes",         "value": 107,  "deltaDirection": "down", "deltaPercent": 19 },
-    { "id": "yt-views", "brand": "youtube",   "metric": "Total Views",   "value": 1407, "deltaDirection": "down", "deltaPercent": 12 }
+    {
+      "id": "fb-views",
+      "brand": "facebook",
+      "metric": "Page Views",
+      "value": 88,
+      "deltaDirection": "down",
+      "deltaPercent": 3
+    },
+    {
+      "id": "fb-likes",
+      "brand": "facebook",
+      "metric": "Likes",
+      "value": 53,
+      "deltaDirection": "down",
+      "deltaPercent": 2
+    },
+    {
+      "id": "ig-likes",
+      "brand": "instagram",
+      "metric": "Likes",
+      "value": 5463,
+      "deltaDirection": "up",
+      "deltaPercent": 2257
+    },
+    {
+      "id": "ig-prof",
+      "brand": "instagram",
+      "metric": "Profile Views",
+      "value": 52000,
+      "deltaDirection": "up",
+      "deltaPercent": 1375
+    },
+    {
+      "id": "tw-rt",
+      "brand": "twitter",
+      "metric": "Retweets",
+      "value": 117,
+      "deltaDirection": "up",
+      "deltaPercent": 303
+    },
+    {
+      "id": "tw-likes",
+      "brand": "twitter",
+      "metric": "Likes",
+      "value": 507,
+      "deltaDirection": "up",
+      "deltaPercent": 553
+    },
+    {
+      "id": "yt-likes",
+      "brand": "youtube",
+      "metric": "Likes",
+      "value": 107,
+      "deltaDirection": "down",
+      "deltaPercent": 19
+    },
+    {
+      "id": "yt-views",
+      "brand": "youtube",
+      "metric": "Total Views",
+      "value": 1407,
+      "deltaDirection": "down",
+      "deltaPercent": 12
+    }
   ]
 }
