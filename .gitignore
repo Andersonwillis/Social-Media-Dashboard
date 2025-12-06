@@ -7,6 +7,14 @@ package-lock.json
 
 # Vite/Builds
 client/dist/
+Client/dist/
+
+# Environment files
+.env.local
+.env.*.local
+
+# Vercel
+.vercel
 
 # OS/editor
 .DS_Store
