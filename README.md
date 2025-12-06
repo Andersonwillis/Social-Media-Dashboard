@@ -174,7 +174,17 @@ Testing & debugging
 
 Git & deployment
 - This project is intended to be submitted from a feature/dev branch (for example `dev-malachi`). Make sure your branch is pushed to a public GitHub repo for submission.
-- To deploy the client, build the Vite app (`npm run build` in `Client`) and host the `dist/` output on Vercel, Netlify, or GitHub Pages. The backend can be deployed to platforms that support Node (Heroku, Render, Railway). For production, replace lowdb with a proper database and secure environment variables.
+
+**Production Deployment (Vercel - Full Stack):**
+- This project is configured for **one-click Vercel deployment** with both frontend and backend
+- The `/api` folder contains Vercel serverless functions that replace the Express server in production
+- Simply run `npx vercel --prod` from the root directory
+- The app will be fully functional with a working API at your Vercel URL
+
+**Alternative Deployment:**
+- Client only: Build the Vite app (`npm run build` in `Client`) and host the `dist/` output on Netlify or GitHub Pages
+- Backend separately: Deploy `Server/` to platforms that support Node (Render, Railway, Fly.io)
+- Note: For split deployment, update `Client/.env` with your backend URL
 
 What to improve (suggestions)
 - Add an About route and navigation if you want multiple pages.
