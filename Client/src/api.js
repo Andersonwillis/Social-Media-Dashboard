@@ -1,5 +1,25 @@
 export const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
+// Cache for CSRF token
+let csrfToken = null;
+
+// Fetch CSRF token from server
+async function getCsrfToken() {
+  if (csrfToken) return csrfToken;
+  
+  const res = await fetch(`${API_BASE}/csrf-token`, {
+    credentials: 'include' // Important: include cookies for cross-site requests
+  });
+  
+  if (!res.ok) {
+    throw new Error(`Failed to fetch CSRF token: ${res.status}`);
+  }
+  
+  const data = await res.json();
+  csrfToken = data.csrfToken;
+  return csrfToken;
+}
+
 export async function getFollowers() {
   const res = await fetch(`${API_BASE}/followers`);
   if (!res.ok) {
@@ -43,12 +63,23 @@ export async function getTotalFollowers() {
 }
 
 export async function patchOverview(id, patch) {
+  const token = await getCsrfToken();
+  
   const res = await fetch(`${API_BASE}/overview/${id}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'CSRF-Token': token
+    },
+    credentials: 'include', // Important: include cookies for cross-site requests
     body: JSON.stringify(patch)
   });
+  
   if (!res.ok) {
+    // If CSRF token is invalid, clear it and let the caller retry
+    if (res.status === 403) {
+      csrfToken = null;
+    }
     const text = await res.text();
     throw new Error(`Failed to update overview: ${res.status} ${text}`);
   }
