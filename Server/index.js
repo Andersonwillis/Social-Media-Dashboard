@@ -3,7 +3,14 @@ import cors from 'cors';
 import { db, initDB } from './db.js';
 
 const app = express();
-app.use(cors());
+
+// Configure CORS to allow requests from the frontend
+const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:5173';
+app.use(cors({
+  origin: allowedOrigin,
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Simple request logger to help debug which paths the client requests

@@ -1,102 +1,426 @@
-# Frontend Mentor - Social media dashboard with theme switcher
-
-![Design preview for the Social media dashboard with theme switcher coding challenge](preview.jpg)
-
-## Welcome! 👋
-
-Thanks for checking out this front-end coding challenge.
-
-[Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects.
-
-**To do this challenge, you need a basic understanding of HTML, CSS and a tiny bit of JavaScript.**
-
-## The challenge
-
-Your challenge is to build out this Social Media Dashboard and get it looking as close to the design as possible.
-
-You can use any tools you like to help you complete the challenge. So if you've got something you'd like to practice, feel free to give it a go.
-
-Your users should be able to:
-
-- View the optimal layout for the site depending on their device's screen size
-- See hover states for all interactive elements on the page
-- Toggle color theme to their preference
-
-Want some support on the challenge? [Join our community](https://www.frontendmentor.io/community) and ask questions in the **#help** channel.
-
-## Where to find everything
-
-Your task is to build out the project to the designs inside the `/design` folder. You will find both a mobile and a desktop version of the design.
-
-The designs are in JPG static format. Using JPGs will mean that you'll need to use your best judgment for styles such as `font-size`, `padding` and `margin`.
-
-If you would like the Figma design file to inspect the design in more detail, you can [subscribe as a PRO member](https://www.frontendmentor.io/pro).
-
-You will find all the required assets in the `/images` folder. The assets are already optimized.
-
-There is also a `style-guide.md` file containing the information you'll need, such as color palette and fonts.
-
-## Building your project
-
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
-
-1. Initialize your project as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/).
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
-
-## Deploying your project
-
-As mentioned above, there are many ways to host your project for free. Our recommended hosts are:
-
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
-
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://medium.com/frontend-mentor/frontend-mentor-trusted-hosting-providers-bf000dfebe).
-
-## Create a custom `README.md`
-
-We strongly recommend overwriting this `README.md` with a custom one. We've provided a template inside the [`README-template.md`](./README-template.md) file in this starter code.
-
-The template provides a guide for what to add. A custom `README` will help you explain your project and reflect on your learnings. Please feel free to edit our template as much as you like.
-
-Once you've added your information to the template, delete this file and rename the `README-template.md` file to `README.md`. That will make it show up as your repository's README file.
-
-## Submitting your solution
-
-Submit your solution on the platform for the rest of the community to see. Follow our ["Complete guide to submitting solutions"](https://medium.com/frontend-mentor/a-complete-guide-to-submitting-solutions-on-frontend-mentor-ac6384162248) for tips on how to do this.
-
-Remember, if you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
-
-## Sharing your solution
-
-There are multiple places you can share your solution:
-
-1. Share your solution page in the **#finished-projects** channel of the [community](https://www.frontendmentor.io/community).
-2. Tweet [@frontendmentor](https://twitter.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in the tweet. We'd love to take a look at what you've built and help share it around.
-3. Share your solution on other social channels like LinkedIn.
-4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
-
-We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback.
-
-The more specific you are with your questions the more likely it is that another member of the community will give you feedback.
-
-## Got feedback for us?
-
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi@frontendmentor.io.
-
-This challenge is completely free. Please share it with anyone who will find it useful for practice.
-
-**Have fun building!** 🚀
-<!--
-	README for the student project: Social Media Dashboard with Theme Switcher
-	Replaced the original Frontend Mentor starter README with a project-specific README
--->
-
 # Social Media Dashboard with Theme Switcher
+
+A full-stack social media analytics dashboard built with React, Express, and a theme switcher feature. This project is based on a [Frontend Mentor](https://www.frontendmentor.io) challenge, enhanced with a backend API and persistent data storage.
+
+![Design preview](other/preview.jpg)
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Development](#development)
+- [Deployment](#deployment)
+- [API Documentation](#api-documentation)
+- [Contributing](#contributing)
+
+---
+
+## 🎯 Overview
+
+This dashboard displays social media statistics across multiple platforms (Facebook, Twitter, Instagram, YouTube) with:
+- Real-time follower counts and engagement metrics
+- Dark/light theme toggle with smooth transitions
+- Responsive design for mobile and desktop
+- RESTful API backend with persistent JSON storage
+- Editable statistics via API endpoints
+
+**Live Demo**: [Add your Vercel URL here]  
+**API Endpoint**: [Add your Railway/Render URL here]
+
+---
+
+## ✨ Features
+
+- ✅ **Theme Switcher**: Toggle between light and dark modes with localStorage persistence
+- ✅ **Responsive Design**: Mobile-first approach with Tailwind CSS
+- ✅ **Real-time Updates**: Fetch and display data from backend API
+- ✅ **RESTful API**: Express.js backend with CRUD operations
+- ✅ **Data Persistence**: LowDB for JSON-based data storage
+- ✅ **Modern Stack**: React 18, Vite, Express, and Tailwind CSS
+- ✅ **CORS Support**: Configured for cross-origin requests
+- ✅ **Error Handling**: Comprehensive error handling on both client and server
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend (Client)
+- **React 18** - UI library
+- **Vite** - Build tool and dev server
+- **Tailwind CSS** - Utility-first CSS framework
+- **React Router** - Client-side routing
+
+### Backend (Server)
+- **Express.js** - Web framework
+- **LowDB** - JSON database
+- **CORS** - Cross-Origin Resource Sharing middleware
+- **Nodemon** - Auto-restart during development
+
+### Deployment
+- **Vercel** - Frontend hosting
+- **Railway/Render** - Backend API hosting
+
+---
+
+## 📁 Project Structure
+
+```
+social-media-dashboard/
+├── Client/                 # Frontend React application
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   │   ├── Header.jsx
+│   │   │   ├── ThemeToggle.jsx
+│   │   │   ├── FollowerCard.jsx
+│   │   │   └── OverviewCard.jsx
+│   │   ├── api.js         # API client functions
+│   │   ├── App.jsx        # Main application component
+│   │   ├── main.jsx       # Entry point
+│   │   └── styles.css     # Global styles
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   └── .env.example       # Environment variables template
+│
+├── Server/                # Backend Express API
+│   ├── index.js          # Express server setup
+│   ├── db.js             # Database configuration
+│   ├── db.json           # Data storage
+│   ├── package.json
+│   └── .env.example      # Environment variables template
+│
+├── api/                  # Vercel serverless functions (optional)
+│   ├── followers.js
+│   ├── overview.js
+│   └── total-followers.js
+│
+├── images/               # Static assets
+├── package.json          # Root package (workspace management)
+├── DEPLOYMENT.md         # Detailed deployment instructions
+└── README.md             # This file
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** (v18 or higher)
+- **npm** (v9 or higher)
+- **Git**
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Andersonwillis/Social-Media-Dashboard.git
+   cd Social-Media-Dashboard
+   ```
+
+2. **Install all dependencies**
+   ```bash
+   # Install root dependencies
+   npm install
+
+   # Install client dependencies
+   cd Client
+   npm install
+
+   # Install server dependencies
+   cd ../Server
+   npm install
+   cd ..
+   ```
+
+   Or use the convenience script:
+   ```bash
+   npm run install:all
+   ```
+
+3. **Set up environment variables**
+
+   **Client** (`Client/.env.local`):
+   ```bash
+   VITE_API_BASE=http://localhost:5174/api
+   ```
+
+   **Server** (`Server/.env`):
+   ```bash
+   PORT=5174
+   ALLOWED_ORIGIN=http://localhost:5173
+   ```
+
+   You can copy from the example files:
+   ```bash
+   cp Client/.env.example Client/.env.local
+   cp Server/.env.example Server/.env
+   ```
+
+---
+
+## 💻 Development
+
+### Running Locally
+
+The project has **two separate servers** that run independently:
+
+#### Option 1: Run Both Servers Simultaneously (Development)
+```bash
+# From the root directory
+npm run dev
+```
+This will start:
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:5174
+
+#### Option 2: Run Servers Separately
+
+**Terminal 1 - Backend Server**:
+```bash
+cd Server
+npm run dev
+```
+
+**Terminal 2 - Frontend Client**:
+```bash
+cd Client
+npm run dev
+```
+
+### Why Separate Servers?
+
+The frontend and backend run on different ports to:
+1. ✅ Simulate production environment where they're on different domains
+2. ✅ Enable independent deployment to different hosting services
+3. ✅ Allow CORS configuration testing during development
+4. ✅ Support scalable architecture patterns
+
+**⚠️ Important for Production**: In production, the frontend (Vercel) and backend (Railway/Render) are deployed to **completely separate servers**. This is the industry-standard approach for full-stack applications.
+
+### Development Workflow
+
+1. **Start both servers** using `npm run dev` from the root directory
+2. **Frontend will automatically reload** on file changes (Hot Module Replacement)
+3. **Backend will automatically restart** on file changes (Nodemon)
+4. **Test your changes** at http://localhost:5173
+5. **Check API responses** at http://localhost:5174/api/health
+
+### Available Scripts
+
+#### Root Directory
+```bash
+npm run dev              # Start both client and server
+npm run dev:client       # Start only the client
+npm run dev:server       # Start only the server
+npm run install:all      # Install all dependencies
+```
+
+#### Client Directory
+```bash
+npm run dev              # Start Vite dev server
+npm run build            # Build for production
+npm run preview          # Preview production build
+```
+
+#### Server Directory
+```bash
+npm run dev              # Start with Nodemon (auto-reload)
+npm start                # Start production server
+```
+
+---
+
+## 🌐 Deployment
+
+### Quick Deployment Overview
+
+1. **Backend First**: Deploy the Express API to Railway, Render, or Heroku
+2. **Frontend Second**: Deploy the React app to Vercel with the backend URL
+3. **Update CORS**: Configure backend to allow requests from your Vercel domain
+
+### Detailed Instructions
+
+For complete deployment instructions, see **[DEPLOYMENT.md](./DEPLOYMENT.md)**
+
+The deployment guide covers:
+- ✅ Step-by-step deployment for Railway, Render, and Heroku
+- ✅ Environment variable configuration
+- ✅ CORS setup for production
+- ✅ Troubleshooting common issues
+- ✅ Continuous deployment setup
+- ✅ Cost estimates and platform comparisons
+
+### Quick Deploy Links
+
+**Backend Options**:
+- [Deploy to Railway](https://railway.app)
+- [Deploy to Render](https://render.com)
+- [Deploy to Heroku](https://heroku.com)
+
+**Frontend**:
+- [Deploy to Vercel](https://vercel.com)
+
+---
+
+## 📡 API Documentation
+
+### Base URL
+- **Development**: `http://localhost:5174/api`
+- **Production**: `https://your-backend.railway.app/api`
+
+### Endpoints
+
+#### Health Check
+```http
+GET /api/health
+```
+Response:
+```json
+{
+  "ok": true
+}
+```
+
+#### Get All Followers
+```http
+GET /api/followers
+```
+Response:
+```json
+[
+  {
+    "id": "facebook",
+    "platform": "Facebook",
+    "username": "@nathanf",
+    "count": 1987,
+    "change": 12,
+    "isUp": true
+  },
+  ...
+]
+```
+
+#### Get Overview Stats
+```http
+GET /api/overview
+```
+Response:
+```json
+[
+  {
+    "id": "facebook-page-views",
+    "platform": "Facebook",
+    "label": "Page Views",
+    "count": 87,
+    "change": 3,
+    "isUp": true
+  },
+  ...
+]
+```
+
+#### Get Total Followers
+```http
+GET /api/total-followers
+```
+Response:
+```json
+{
+  "total": 23004
+}
+```
+
+#### Update Follower Count
+```http
+PATCH /api/followers/:id
+Content-Type: application/json
+
+{
+  "count": 2000,
+  "change": 15
+}
+```
+
+#### Update Overview Stat
+```http
+PATCH /api/overview/:id
+Content-Type: application/json
+
+{
+  "count": 100,
+  "change": 5
+}
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📝 Project Notes
+
+### Architecture Decisions
+
+- **Separate Deployments**: Frontend and backend are deployed independently to follow modern full-stack architecture patterns
+- **JSON Database**: Using LowDB for simplicity - easily upgradeable to PostgreSQL/MongoDB for production
+- **Environment Variables**: All environment-specific configuration is externalized
+- **CORS Configuration**: Properly configured to only allow requests from authorized origins
+
+### Known Limitations
+
+- LowDB is file-based and not suitable for high-traffic production use
+- No authentication/authorization implemented
+- No rate limiting on API endpoints
+
+### Future Enhancements
+
+- [ ] Add user authentication
+- [ ] Implement real OAuth connections to social media APIs
+- [ ] Add PostgreSQL/MongoDB for production database
+- [ ] Implement Redis caching layer
+- [ ] Add comprehensive test coverage
+- [ ] Add API rate limiting
+- [ ] Implement WebSocket for real-time updates
+
+---
+
+## 📄 License
+
+This project is based on a Frontend Mentor challenge and is provided as-is for educational purposes.
+
+---
+
+## 🙏 Acknowledgments
+
+- Design by [Frontend Mentor](https://www.frontendmentor.io)
+- Icons from the Frontend Mentor design files
+- Built as part of a web development course project
+
+---
+
+## 📞 Contact
+
+**Repository**: [github.com/Andersonwillis/Social-Media-Dashboard](https://github.com/Andersonwillis/Social-Media-Dashboard)
+
+**Issues**: [Report a bug](https://github.com/Andersonwillis/Social-Media-Dashboard/issues)
+
+---
+
+**Happy Coding! 🚀**
 
 This repository contains a small React (Vite) frontend and an Express prototype backend that serves a lowdb JSON database. The app is a Frontend Mentor coding challenge implementation that shows social media follower counts and overview metrics with a light/dark theme toggle.
 
