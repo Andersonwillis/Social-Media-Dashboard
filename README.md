@@ -27,7 +27,7 @@ This dashboard displays social media statistics across multiple platforms (Faceb
 - RESTful API backend with persistent JSON storage
 - Editable statistics via API endpoints
 
-**Live Demo**: [Add your Vercel URL here]  
+**Live Demo**: https://social-media-dashboard-kappa-rosy.vercel.app  
 **API Endpoint**: [Add your Railway/Render URL here]
 
 ---
