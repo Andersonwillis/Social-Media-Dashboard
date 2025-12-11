@@ -6,7 +6,7 @@ const fmt = (n) => n >= 1_000_000 ? `${(n/1_000_000).toFixed(n%1_000_000?1:0)}m`
   : n >= 10_000 ? `${(n/1_000).toFixed(n%1_000?1:0)}k`
   : Number(n).toLocaleString();
 
-export default function OverviewCard({ data, onBump }) {
+export default function OverviewCard({ data, onBump, isSignedIn = true }) {
   const { brand, metric, value, deltaDirection, deltaPercent } = data;
   return (
     <article className="card card--overview" data-brand={brand} tabIndex={0}>
@@ -17,7 +17,19 @@ export default function OverviewCard({ data, onBump }) {
         <img src={deltaIcon(deltaDirection)} alt="" aria-hidden="true" />
         <span>{deltaPercent}%</span>
       </p>
-      <button className="btn-bump" onClick={onBump} aria-label={`Increase ${metric}`}>+1</button>
+      <button 
+        className="btn-bump" 
+        onClick={onBump} 
+        disabled={!isSignedIn}
+        aria-label={`Increase ${metric}`}
+        title={!isSignedIn ? "Sign in to modify stats" : ""}
+        style={{
+          opacity: isSignedIn ? 1 : 0.5,
+          cursor: isSignedIn ? 'pointer' : 'not-allowed'
+        }}
+      >
+        +1
+      </button>
     </article>
   );
 }

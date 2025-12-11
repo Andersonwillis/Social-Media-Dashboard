@@ -9,7 +9,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "csurf": "^1.11.0",
+    "csrf-csrf": "^3.0.4",
     "express": "^4.19.2",
     "lowdb": "^7.0.1"
   },

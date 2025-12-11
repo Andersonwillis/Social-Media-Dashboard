@@ -1,7 +1,21 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { doubleCsrf } from 'csrf-csrf';
 
 const DB_PATH = '/tmp/db.json';
+
+// Configure CSRF protection
+const { validateRequest } = doubleCsrf({
+  getSecret: () => process.env.CSRF_SECRET || 'your-secret-key-change-in-production',
+  cookieName: '_csrf',
+  cookieOptions: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  },
+  size: 64,
+  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
+});
 
 function getDB() {
   if (!existsSync(DB_PATH)) {
@@ -25,9 +39,11 @@ function saveDB(data) {
 
 export default function handler(req, res) {
   // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const allowedOrigin = process.env.ALLOWED_ORIGIN || '*';
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-csrf-token');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -42,6 +58,13 @@ export default function handler(req, res) {
 
   // PATCH /api/followers (assuming body has id)
   if (req.method === 'PATCH') {
+    // Validate CSRF token for state-changing operations
+    try {
+      validateRequest(req);
+    } catch (err) {
+      return res.status(403).json({ error: 'Invalid CSRF token' });
+    }
+
     const { id, ...patch } = req.body;
     const item = db.followers.find(f => f.id === id);
     if (!item) {

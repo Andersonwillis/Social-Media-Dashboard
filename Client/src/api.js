@@ -69,7 +69,7 @@ export async function patchOverview(id, patch) {
     method: 'PATCH',
     headers: { 
       'Content-Type': 'application/json',
-      'CSRF-Token': token
+      'x-csrf-token': token
     },
     credentials: 'include', // Important: include cookies for cross-site requests
     body: JSON.stringify(patch)

@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { db, initDB } from './db.js';
-import csurf from 'csurf';
+import { doubleCsrf } from 'csrf-csrf';
 
 const app = express();
 
@@ -20,12 +20,19 @@ app.use(cookieParser());
 // sameSite: 'none' allows cross-site cookies (required for Railway deployment)
 // secure: true in production ensures cookies are only sent over HTTPS
 // httpOnly: true prevents JavaScript access to the cookie
-const csrfProtection = csurf({
-  cookie: {
+const {
+  generateToken, // Use this in the endpoint that provides the CSRF token
+  doubleCsrfProtection, // This is the middleware to use on protected routes
+} = doubleCsrf({
+  getSecret: () => process.env.CSRF_SECRET || 'your-secret-key-change-in-production',
+  cookieName: '_csrf',
+  cookieOptions: {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  }
+  },
+  size: 64,
+  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
 });
 
 // Simple request logger to help debug which paths the client requests
@@ -47,8 +54,9 @@ app.use((req, _res, next) => {
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 // CSRF Token endpoint - allows clients to fetch the token
-app.get('/api/csrf-token', csrfProtection, (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
+app.get('/api/csrf-token', (req, res) => {
+  const csrfToken = generateToken(req, res);
+  res.json({ csrfToken });
 });
 
 // Followers
@@ -57,7 +65,7 @@ app.get('/api/followers', async (_req, res) => {
   res.json(db.data.followers);
 });
 
-app.patch('/api/followers/:id', csrfProtection, async (req, res) => {
+app.patch('/api/followers/:id', doubleCsrfProtection, async (req, res) => {
   const { id } = req.params;
   const patch = req.body;
   await db.read();
@@ -74,7 +82,7 @@ app.get('/api/overview', async (_req, res) => {
   res.json(db.data.overview);
 });
 
-app.patch('/api/overview/:id', csrfProtection, async (req, res) => {
+app.patch('/api/overview/:id', doubleCsrfProtection, async (req, res) => {
   const { id } = req.params;
   const patch = req.body;
   await db.read();

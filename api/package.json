@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "dependencies": {
+    "csrf-csrf": "^3.0.4"
+  }
+}
