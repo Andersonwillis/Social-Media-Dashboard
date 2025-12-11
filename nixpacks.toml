@@ -6,12 +6,11 @@ nixPkgs = ["nodejs_22"]
 
 [phases.install]
 cmds = [
-  "cd Server && npm install"
+  "cd Server && npm install --omit=dev"
 ]
+
+[phases.build]
+# Prevent nixpacks from auto-detecting npm scripts
 
 [start]
 cmd = "cd Server && node index.js"
-
-[variables]
-# Ensure Railway doesn't try to use serverless mode
-NIXPACKS_NO_MUSL = "1"
