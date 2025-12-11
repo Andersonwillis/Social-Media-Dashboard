@@ -1,0 +1,26 @@
+# Ignore Vercel serverless functions - we use Express server instead
+api/
+
+# Ignore frontend code - deployed separately to Vercel
+Client/
+
+# Ignore development files
+src/
+images/
+other/
+.vscode/
+*.md
+!Server/
+
+# Ignore documentation
+ARCHITECTURE.md
+CSRF_SETUP.md
+CSRF_TOKEN_EXCHANGE.md
+DEPLOYMENT.md
+FRONTEND_BACKEND_CONNECTION.md
+PRESENTATION_GUIDE.md
+QUICKSTART.md
+RAILWAY_CSRF_FIX.md
+README.md
+
+# Keep only Server directory and config files
