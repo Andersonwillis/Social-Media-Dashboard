@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getFollowers, getOverview, getTotalFollowers, patchOverview } from './api';
 import Header from './components/Header.jsx';
 import FollowerCard from './components/FollowerCard.jsx';
