@@ -99,5 +99,19 @@ app.get('/', (_req, res) => {
 
 const PORT = process.env.PORT || 5174;
 initDB().then(() => {
-  app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log('='.repeat(60));
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🔐 CORS allowed origin: ${allowedOrigin}`);
+    console.log(`📡 Available endpoints:`);
+    console.log(`   GET  /api/health`);
+    console.log(`   GET  /api/csrf-token`);
+    console.log(`   GET  /api/followers`);
+    console.log(`   PATCH /api/followers/:id`);
+    console.log(`   GET  /api/overview`);
+    console.log(`   PATCH /api/overview/:id`);
+    console.log(`   GET  /api/total-followers`);
+    console.log('='.repeat(60));
+  });
 });

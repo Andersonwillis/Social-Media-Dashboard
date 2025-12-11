@@ -11,3 +11,7 @@ cmds = [
 
 [start]
 cmd = "cd Server && node index.js"
+
+[variables]
+# Ensure Railway doesn't try to use serverless mode
+NIXPACKS_NO_MUSL = "1"
