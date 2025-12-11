@@ -3,32 +3,34 @@
 ## Issues Fixed
 
 ### 1. Railway Deployment Error
-**Problem:** Package-lock.json was out of sync, missing CSRF-related dependencies
-**Root Cause:** package-lock.json was in .gitignore and not committed to repository
+**Problem:** Railpack auto-detection was using `npm ci` which failed due to package-lock.json sync issues
+**Root Cause:** package-lock.json was in .gitignore and Railway's Railpack was auto-detecting npm commands
 
 **Solution:**
 - Removed `package-lock.json` from `.gitignore` (commented it out with explanation)
 - Generated fresh `package-lock.json` with all workspace dependencies
-- Updated `nixpacks.toml` to use `npm install --workspaces` instead of `npm ci --workspaces`
+- Created `railway.json` to explicitly configure build settings
+- Updated `nixpacks.toml` to use `npm install` instead of `npm ci`
 - Added package-lock.json to git
 
 ### 2. Vercel Deployment Error  
-**Problem:** Rollup native module error - Vercel trying to build from root instead of Client directory
-**Root Cause:** vercel.json didn't specify build configuration for monorepo workspace structure
+**Problem:** Rollup native module error - Vercel installing from root workspace causing @rollup/rollup-linux-x64-gnu conflicts
+**Root Cause:** vercel.json was building from root, pulling in unnecessary rolldown/rollup dependencies from dev workspace
 
 **Solution:**
-- Updated `vercel.json` with proper configuration:
-  - `buildCommand`: "npm run build:client"
+- Updated `vercel.json` to install and build ONLY from Client directory:
+  - `buildCommand`: "npm install --prefix Client --legacy-peer-deps && npm run build --prefix Client"
   - `outputDirectory`: "Client/dist"
-  - `installCommand`: "npm install"
+  - `installCommand`: "echo 'Skipping root install'" (avoid root workspace pollution)
   - `framework`: null (to prevent auto-detection issues)
 
 ## Files Modified
 
 1. **`.gitignore`** - Uncommented package-lock.json so it can be committed
-2. **`vercel.json`** - Added build configuration for monorepo
-3. **`nixpacks.toml`** - Changed from `npm ci` to `npm install` for Railway
-4. **`package-lock.json`** - Generated and added to git
+2. **`vercel.json`** - Added build configuration to install/build only from Client directory
+3. **`railway.json`** - NEW: Explicit Railway configuration to override Railpack auto-detection
+4. **`nixpacks.toml`** - Changed from `npm ci --workspaces` to `npm install`
+5. **`package-lock.json`** - Generated and added to git
 
 ## Next Steps
 
