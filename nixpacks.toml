@@ -5,8 +5,8 @@ nixPkgs = ["nodejs_22"]
 
 [phases.install]
 cmds = [
-  "npm install --workspaces"
+  "npm install"
 ]
 
 [start]
-cmd = "npm run start --workspace=Server"
+cmd = "npm run start"

@@ -2,8 +2,8 @@
   "github": {
     "silent": true
   },
-  "buildCommand": "npm run build:client",
+  "buildCommand": "npm install --prefix Client --legacy-peer-deps && npm run build --prefix Client",
   "outputDirectory": "Client/dist",
-  "installCommand": "npm install",
+  "installCommand": "echo 'Skipping root install'",
   "framework": null
 }
