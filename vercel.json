@@ -2,8 +2,8 @@
   "github": {
     "silent": true
   },
-  "buildCommand": "npm install --legacy-peer-deps && npm run build",
-  "outputDirectory": "dist",
-  "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": "npm install && npm run build --workspace=Client",
+  "outputDirectory": "Client/dist",
+  "installCommand": "npm install",
   "framework": null
 }
