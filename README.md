@@ -34,29 +34,47 @@ This dashboard displays social media statistics across multiple platforms (Faceb
 
 ## ✨ Features
 
+### Core Features
 - ✅ **Theme Switcher**: Toggle between light and dark modes with localStorage persistence
-- ✅ **Responsive Design**: Mobile-first approach with Tailwind CSS
+- ✅ **Responsive Design**: Mobile-first approach with custom CSS
 - ✅ **Real-time Updates**: Fetch and display data from backend API
 - ✅ **RESTful API**: Express.js backend with CRUD operations
 - ✅ **Data Persistence**: LowDB for JSON-based data storage
-- ✅ **Modern Stack**: React 18, Vite, Express, and Tailwind CSS
+- ✅ **Modern Stack**: React 18, Vite, Express, and Clerk Authentication
 - ✅ **CORS Support**: Configured for cross-origin requests
 - ✅ **Error Handling**: Comprehensive error handling on both client and server
+
+### Advanced Features
+- 📊 **Analytics Dashboard**: Multi-line growth trend graphs with historical data (week/month/year/all-time)
+- 🎯 **Goals Tracking**: Set and track follower/engagement goals with progress visualization
+  - Auto-filled current values from dashboard data
+  - Boost, complete, and remove goal functionality
+  - Status indicators (ahead, on-track, at-risk, behind)
+- 📈 **Reports Generation**: Create and download performance reports
+  - Multiple report templates (summary, engagement, growth, comparison)
+  - Filter by time period and platform
+  - Recent reports history
+- 🔐 **Authentication**: Clerk-powered sign-in/sign-up with role-based access control
+- 👁️ **View-Only Mode**: Guest access to explore dashboard without signing in
+- ⚙️ **Settings Page**: User profile management and preferences
+- 🧭 **Navigation**: Centralized navigation bar with theme toggle and user controls
 
 ---
 
 ## 🛠 Tech Stack
 
 ### Frontend (Client)
-- **React 18** - UI library
+- **React 18** - UI library with hooks
 - **Vite** - Build tool and dev server
-- **Tailwind CSS** - Utility-first CSS framework
-- **React Router** - Client-side routing
+- **React Router DOM** - Client-side routing (7 pages)
+- **Clerk React** - Authentication and user management
+- **Custom CSS** - Responsive styling with CSS variables
 
 ### Backend (Server)
 - **Express.js** - Web framework
-- **LowDB** - JSON database
+- **LowDB 7** - JSON database with ESM support
 - **CORS** - Cross-Origin Resource Sharing middleware
+- **CSRF Protection** - Security with double-submit cookie pattern
 - **Nodemon** - Auto-restart during development
 
 ### Deployment
@@ -73,34 +91,45 @@ social-media-dashboard/
 │   ├── src/
 │   │   ├── components/    # React components
 │   │   │   ├── Header.jsx
+│   │   │   ├── Navigation.jsx       # Main navigation bar
 │   │   │   ├── ThemeToggle.jsx
 │   │   │   ├── FollowerCard.jsx
 │   │   │   └── OverviewCard.jsx
+│   │   ├── pages/         # Route pages
+│   │   │   ├── AnalyticsPage.jsx    # Growth trend graphs
+│   │   │   ├── GoalsPage.jsx        # Goal tracking
+│   │   │   ├── ReportsPage.jsx      # Report generation
+│   │   │   ├── SettingsPage.jsx     # User settings
+│   │   │   ├── SignInPage.jsx       # Authentication
+│   │   │   └── SignUpPage.jsx       # Registration
+│   │   ├── hooks/         # Custom React hooks
+│   │   │   └── useRole.js           # RBAC hook
 │   │   ├── api.js         # API client functions
-│   │   ├── App.jsx        # Main application component
-│   │   ├── main.jsx       # Entry point
+│   │   ├── App.jsx        # Dashboard page
+│   │   ├── main.jsx       # Entry point & routing
 │   │   └── styles.css     # Global styles
 │   ├── index.html
 │   ├── package.json
-│   ├── vite.config.js
-│   ├── tailwind.config.js
-│   └── .env.example       # Environment variables template
+│   └── vite.config.js
 │
 ├── Server/                # Backend Express API
 │   ├── index.js          # Express server setup
 │   ├── db.js             # Database configuration
-│   ├── db.json           # Data storage
+│   ├── db.json           # Data storage (followers, overview, analytics)
+│   ├── autoAssignRole.js # Clerk role management
+│   ├── clerkWebhook.js   # Webhook handler
 │   ├── package.json
-│   └── .env.example      # Environment variables template
+│   └── nodemon.json
 │
-├── api/                  # Vercel serverless functions (optional)
+├── api/                  # Vercel serverless functions
+│   ├── analytics.js      # Historical data endpoint
 │   ├── followers.js
 │   ├── overview.js
 │   └── total-followers.js
 │
 ├── images/               # Static assets
 ├── package.json          # Root package (workspace management)
-├── DEPLOYMENT.md         # Detailed deployment instructions
+├── vercel.json           # Vercel deployment config
 └── README.md             # This file
 ```
 
