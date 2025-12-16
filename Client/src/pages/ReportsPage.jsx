@@ -7,6 +7,29 @@ function ReportsPage() {
   const navigate = useNavigate();
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [selectedPlatforms, setSelectedPlatforms] = useState(['all']);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [scheduledReports, setScheduledReports] = useState([
+    {
+      id: 1,
+      name: 'Weekly Team Update',
+      frequency: 'weekly',
+      day: 'Monday',
+      time: '09:00',
+      recipients: 'team@company.com',
+      reportType: 'summary',
+      platforms: ['all'],
+      status: 'active'
+    }
+  ]);
+  const [newSchedule, setNewSchedule] = useState({
+    name: '',
+    frequency: 'weekly',
+    day: 'Monday',
+    time: '09:00',
+    recipients: '',
+    reportType: 'summary',
+    platforms: ['all']
+  });
 
   // Mock report templates
   const reportTemplates = [
@@ -164,6 +187,60 @@ function ReportsPage() {
                      selectedPeriod === 'week' && template.type === 'engagement'
       };
     });
+  };
+
+  // Handle creating a new scheduled report
+  const handleScheduleReport = (e) => {
+    e.preventDefault();
+    
+    // Validation
+    if (!newSchedule.name.trim()) {
+      alert('Please enter a name for the scheduled report');
+      return;
+    }
+    
+    if (!newSchedule.recipients.trim()) {
+      alert('Please enter recipient email address(es)');
+      return;
+    }
+    
+    // Create new scheduled report
+    const schedule = {
+      id: Math.max(...scheduledReports.map(s => s.id), 0) + 1,
+      ...newSchedule,
+      status: 'active',
+      createdAt: new Date().toISOString()
+    };
+    
+    setScheduledReports([...scheduledReports, schedule]);
+    
+    // Reset form and close modal
+    setNewSchedule({
+      name: '',
+      frequency: 'weekly',
+      day: 'Monday',
+      time: '09:00',
+      recipients: '',
+      reportType: 'summary',
+      platforms: ['all']
+    });
+    setShowScheduleModal(false);
+    
+    alert(`✅ Scheduled Report Created!\n\n📊 ${schedule.name}\n📅 Frequency: ${schedule.frequency}\n📧 Recipients: ${schedule.recipients}\n\nYour report will be automatically generated and sent!`);
+  };
+
+  // Handle deleting a scheduled report
+  const handleDeleteSchedule = (id) => {
+    if (confirm('Are you sure you want to delete this scheduled report?')) {
+      setScheduledReports(scheduledReports.filter(s => s.id !== id));
+    }
+  };
+
+  // Handle toggling schedule status
+  const handleToggleSchedule = (id) => {
+    setScheduledReports(scheduledReports.map(s => 
+      s.id === id ? { ...s, status: s.status === 'active' ? 'paused' : 'active' } : s
+    ));
   };
 
   return (
@@ -529,7 +606,7 @@ function ReportsPage() {
                   Automatically generate and email reports on a regular schedule. Perfect for weekly team updates or monthly executive summaries.
                 </p>
                 <button
-                  onClick={() => alert('📅 Schedule Reports\n\nThis feature would allow you to:\n• Set up recurring reports (daily, weekly, monthly)\n• Choose recipients and email templates\n• Customize report content and format\n• Track delivery history\n\nThis would open a scheduling interface in production!')}
+                  onClick={() => setShowScheduleModal(true)}
                   style={{
                     padding: '0.875rem 1.75rem',
                     borderRadius: '0.5rem',
@@ -561,7 +638,397 @@ function ReportsPage() {
                 </button>
               </div>
             </div>
+
+            {/* Active Scheduled Reports List */}
+            {scheduledReports.length > 0 && (
+              <div style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid rgba(148, 163, 184, 0.2)' }}>
+                <h4 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '600' }}>
+                  Active Schedules ({scheduledReports.filter(s => s.status === 'active').length})
+                </h4>
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                  {scheduledReports.map(schedule => (
+                    <div key={schedule.id} style={{
+                      padding: '1rem',
+                      backgroundColor: 'var(--card-bg)',
+                      borderRadius: '0.5rem',
+                      border: '1px solid rgba(148, 163, 184, 0.2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '1rem'
+                    }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                          <strong style={{ fontSize: '0.95rem' }}>{schedule.name}</strong>
+                          <span style={{
+                            padding: '0.125rem 0.5rem',
+                            borderRadius: '0.25rem',
+                            fontSize: '0.75rem',
+                            fontWeight: '600',
+                            backgroundColor: schedule.status === 'active' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(251, 146, 60, 0.1)',
+                            color: schedule.status === 'active' ? '#22c55e' : '#fb923c'
+                          }}>
+                            {schedule.status === 'active' ? '● Active' : '⏸ Paused'}
+                          </span>
+                        </div>
+                        <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem' }}>
+                          📅 {schedule.frequency.charAt(0).toUpperCase() + schedule.frequency.slice(1)} • 
+                          {schedule.frequency === 'weekly' && ` ${schedule.day}s`}
+                          {schedule.frequency === 'monthly' && ` on day ${schedule.day}`} • 
+                          {schedule.time} • 
+                          📧 {schedule.recipients}
+                        </p>
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', backgroundColor: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', borderRadius: '0.25rem' }}>
+                            {reportTemplates.find(t => t.type === schedule.reportType)?.name || schedule.reportType}
+                          </span>
+                          <span style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', backgroundColor: 'rgba(139, 92, 246, 0.1)', color: '#8b5cf6', borderRadius: '0.25rem' }}>
+                            {schedule.platforms.includes('all') ? 'All Platforms' : schedule.platforms.join(', ')}
+                          </span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button
+                          onClick={() => handleToggleSchedule(schedule.id)}
+                          style={{
+                            padding: '0.5rem 0.75rem',
+                            borderRadius: '0.375rem',
+                            border: '1px solid rgba(148, 163, 184, 0.3)',
+                            backgroundColor: 'transparent',
+                            color: 'var(--text)',
+                            cursor: 'pointer',
+                            fontSize: '0.85rem',
+                            transition: 'all 0.2s'
+                          }}
+                          title={schedule.status === 'active' ? 'Pause' : 'Resume'}
+                        >
+                          {schedule.status === 'active' ? '⏸' : '▶️'}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSchedule(schedule.id)}
+                          style={{
+                            padding: '0.5rem 0.75rem',
+                            borderRadius: '0.375rem',
+                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                            color: '#ef4444',
+                            cursor: 'pointer',
+                            fontSize: '0.85rem',
+                            transition: 'all 0.2s'
+                          }}
+                          title="Delete"
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Schedule Report Modal */}
+          {showScheduleModal && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
+              padding: '1rem'
+            }}>
+              <div style={{
+                backgroundColor: 'var(--card-bg)',
+                borderRadius: '1rem',
+                maxWidth: '600px',
+                width: '100%',
+                maxHeight: '90vh',
+                overflow: 'auto',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+              }}>
+                {/* Modal Header */}
+                <div style={{
+                  padding: '1.5rem',
+                  borderBottom: '1px solid rgba(148, 163, 184, 0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                  <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '600' }}>
+                    📅 Schedule Report
+                  </h2>
+                  <button
+                    onClick={() => setShowScheduleModal(false)}
+                    style={{
+                      border: 'none',
+                      backgroundColor: 'transparent',
+                      fontSize: '1.5rem',
+                      cursor: 'pointer',
+                      color: 'var(--muted)',
+                      padding: '0.25rem',
+                      lineHeight: 1
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+
+                {/* Modal Form */}
+                <form onSubmit={handleScheduleReport} style={{ padding: '1.5rem' }}>
+                  {/* Report Name */}
+                  <div style={{ marginBottom: '1.25rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                      Report Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={newSchedule.name}
+                      onChange={(e) => setNewSchedule({ ...newSchedule, name: e.target.value })}
+                      placeholder="e.g., Weekly Team Update"
+                      required
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid rgba(148, 163, 184, 0.3)',
+                        backgroundColor: 'var(--bg)',
+                        color: 'var(--text)',
+                        fontSize: '0.95rem'
+                      }}
+                    />
+                  </div>
+
+                  {/* Frequency */}
+                  <div style={{ marginBottom: '1.25rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                      Frequency *
+                    </label>
+                    <select
+                      value={newSchedule.frequency}
+                      onChange={(e) => setNewSchedule({ ...newSchedule, frequency: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid rgba(148, 163, 184, 0.3)',
+                        backgroundColor: 'var(--bg)',
+                        color: 'var(--text)',
+                        fontSize: '0.95rem'
+                      }}
+                    >
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                  </div>
+
+                  {/* Day (for weekly/monthly) */}
+                  {newSchedule.frequency !== 'daily' && (
+                    <div style={{ marginBottom: '1.25rem' }}>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                        {newSchedule.frequency === 'weekly' ? 'Day of Week' : 'Day of Month'} *
+                      </label>
+                      {newSchedule.frequency === 'weekly' ? (
+                        <select
+                          value={newSchedule.day}
+                          onChange={(e) => setNewSchedule({ ...newSchedule, day: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '0.75rem',
+                            borderRadius: '0.5rem',
+                            border: '1px solid rgba(148, 163, 184, 0.3)',
+                            backgroundColor: 'var(--bg)',
+                            color: 'var(--text)',
+                            fontSize: '0.95rem'
+                          }}
+                        >
+                          <option value="Monday">Monday</option>
+                          <option value="Tuesday">Tuesday</option>
+                          <option value="Wednesday">Wednesday</option>
+                          <option value="Thursday">Thursday</option>
+                          <option value="Friday">Friday</option>
+                          <option value="Saturday">Saturday</option>
+                          <option value="Sunday">Sunday</option>
+                        </select>
+                      ) : (
+                        <input
+                          type="number"
+                          min="1"
+                          max="28"
+                          value={newSchedule.day}
+                          onChange={(e) => setNewSchedule({ ...newSchedule, day: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '0.75rem',
+                            borderRadius: '0.5rem',
+                            border: '1px solid rgba(148, 163, 184, 0.3)',
+                            backgroundColor: 'var(--bg)',
+                            color: 'var(--text)',
+                            fontSize: '0.95rem'
+                          }}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {/* Time */}
+                  <div style={{ marginBottom: '1.25rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                      Time *
+                    </label>
+                    <input
+                      type="time"
+                      value={newSchedule.time}
+                      onChange={(e) => setNewSchedule({ ...newSchedule, time: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid rgba(148, 163, 184, 0.3)',
+                        backgroundColor: 'var(--bg)',
+                        color: 'var(--text)',
+                        fontSize: '0.95rem'
+                      }}
+                    />
+                  </div>
+
+                  {/* Report Type */}
+                  <div style={{ marginBottom: '1.25rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                      Report Type *
+                    </label>
+                    <select
+                      value={newSchedule.reportType}
+                      onChange={(e) => setNewSchedule({ ...newSchedule, reportType: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid rgba(148, 163, 184, 0.3)',
+                        backgroundColor: 'var(--bg)',
+                        color: 'var(--text)',
+                        fontSize: '0.95rem'
+                      }}
+                    >
+                      {reportTemplates.map(template => (
+                        <option key={template.type} value={template.type}>
+                          {template.icon} {template.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Recipients */}
+                  <div style={{ marginBottom: '1.25rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                      Email Recipients * <span style={{ color: '#64748b', fontWeight: '400', fontSize: '0.85rem' }}>(comma-separated)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={newSchedule.recipients}
+                      onChange={(e) => setNewSchedule({ ...newSchedule, recipients: e.target.value })}
+                      placeholder="email1@example.com, email2@example.com"
+                      required
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid rgba(148, 163, 184, 0.3)',
+                        backgroundColor: 'var(--bg)',
+                        color: 'var(--text)',
+                        fontSize: '0.95rem'
+                      }}
+                    />
+                  </div>
+
+                  {/* Platforms */}
+                  <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                      Platforms
+                    </label>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      {platforms.map(platform => (
+                        <button
+                          key={platform.id}
+                          type="button"
+                          onClick={() => {
+                            if (platform.id === 'all') {
+                              setNewSchedule({ ...newSchedule, platforms: ['all'] });
+                            } else {
+                              const filtered = newSchedule.platforms.filter(p => p !== 'all');
+                              if (filtered.includes(platform.id)) {
+                                const newPlatforms = filtered.filter(p => p !== platform.id);
+                                setNewSchedule({ ...newSchedule, platforms: newPlatforms.length === 0 ? ['all'] : newPlatforms });
+                              } else {
+                                setNewSchedule({ ...newSchedule, platforms: [...filtered, platform.id] });
+                              }
+                            }
+                          }}
+                          style={{
+                            padding: '0.5rem 1rem',
+                            borderRadius: '0.375rem',
+                            border: newSchedule.platforms.includes(platform.id) ? '2px solid #3b82f6' : '1px solid rgba(148, 163, 184, 0.3)',
+                            backgroundColor: newSchedule.platforms.includes(platform.id) ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                            color: newSchedule.platforms.includes(platform.id) ? '#3b82f6' : 'var(--text)',
+                            cursor: 'pointer',
+                            fontSize: '0.85rem',
+                            fontWeight: '500',
+                            transition: 'all 0.2s'
+                          }}
+                        >
+                          {platform.icon} {platform.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Form Actions */}
+                  <div style={{ display: 'flex', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(148, 163, 184, 0.2)' }}>
+                    <button
+                      type="button"
+                      onClick={() => setShowScheduleModal(false)}
+                      style={{
+                        flex: 1,
+                        padding: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid rgba(148, 163, 184, 0.3)',
+                        backgroundColor: 'transparent',
+                        color: 'var(--text)',
+                        cursor: 'pointer',
+                        fontSize: '0.95rem',
+                        fontWeight: '600'
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      style={{
+                        flex: 1,
+                        padding: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: 'none',
+                        backgroundColor: '#3b82f6',
+                        color: 'white',
+                        cursor: 'pointer',
+                        fontSize: '0.95rem',
+                        fontWeight: '600',
+                        transition: 'background-color 0.2s'
+                      }}
+                    >
+                      Create Schedule
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       </SignedIn>
     </div>
