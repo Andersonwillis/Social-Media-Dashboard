@@ -14,9 +14,9 @@
   --youtube:  hsl(348,97%,39%);
 
   /* Light theme */
-  --bg: hsl(0,0%,100%);
+  --bg: hsl(220,20%,95%);
   --top-bg: hsl(225,100%,98%);
-  --card-bg: hsl(227,47%,96%);
+  --card-bg: hsl(0,0%,100%);
   --text: hsl(230,17%,14%);
   --muted: hsl(228,12%,44%);
   --toggle-track: hsl(230,22%,74%);
@@ -24,7 +24,7 @@
   --radius: 12px;
   --ring: 2px;
   --gap: 1.25rem;
-  --shadow: 0 10px 30px rgba(0,0,0,.06);
+  --shadow: 0 4px 20px rgba(0,0,0,.12);
 }
 
 /* ===== Dark via auto preference ===== */

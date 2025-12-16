@@ -100,6 +100,37 @@ app.get('/api/total-followers', async (_req, res) => {
   res.json({ total });
 });
 
+// Analytics historical data
+app.get('/api/analytics', async (req, res) => {
+  try {
+    await db.read();
+    
+    // Get the time range from query params (default to 'week')
+    const { range = 'week' } = req.query;
+    
+    // Validate range
+    const validRanges = ['week', 'month', 'year', 'inception'];
+    if (!validRanges.includes(range)) {
+      return res.status(400).json({ 
+        error: 'Invalid range parameter',
+        validRanges 
+      });
+    }
+    
+    // Get the analytics data for the requested range
+    const analyticsData = db.data.analytics?.[range];
+    
+    if (!analyticsData) {
+      return res.status(404).json({ error: 'Analytics data not found for range: ' + range });
+    }
+    
+    res.json(analyticsData);
+  } catch (error) {
+    console.error('Error fetching analytics:', error);
+    res.status(500).json({ error: 'Failed to fetch analytics data' });
+  }
+});
+
 // Simple root handler to avoid browser "Cannot GET /" confusion during development
 app.get('/', (_req, res) => {
   res.json({ ok: true, message: 'API running. Use /api/* endpoints.' });
@@ -120,6 +151,7 @@ initDB().then(() => {
     console.log(`   GET  /api/overview`);
     console.log(`   PATCH /api/overview/:id`);
     console.log(`   GET  /api/total-followers`);
+    console.log(`   GET  /api/analytics?range=[week|month|year|inception]`);
     console.log('='.repeat(60));
   });
 });

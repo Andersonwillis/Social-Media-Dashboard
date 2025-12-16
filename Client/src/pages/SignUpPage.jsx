@@ -8,13 +8,17 @@ export default function SignUpPage() {
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '100vh',
-      padding: '2rem'
+      padding: '2rem',
+      backgroundColor: '#0f172a'
     }}>
       <SignUp 
-        routing="path" 
-        path="/sign-up"
-        signInUrl="/sign-in"
-        afterSignUpUrl="/"
+        appearance={{
+          elements: {
+            rootBox: {
+              margin: '0 auto'
+            }
+          }
+        }}
       />
     </div>
   );
