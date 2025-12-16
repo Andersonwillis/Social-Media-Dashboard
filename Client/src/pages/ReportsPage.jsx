@@ -138,11 +138,218 @@ function ReportsPage() {
       ? 'All Platforms' 
       : selectedPlatforms.map(p => platforms.find(pl => pl.id === p)?.name).join(', ');
     
-    alert(`✅ Generating ${reportType}\n\n📅 Period: ${selectedPeriod.toUpperCase()}\n🌐 Platforms: ${platformText}\n📄 Format: ${format}\n\n⏳ This would download a real ${format} file in production!`);
+    // Generate report content
+    const reportContent = generateReportContent(reportType, platformText);
+    
+    // Create filename
+    const date = new Date().toISOString().split('T')[0];
+    const filename = `${reportType.replace(/\s+/g, '_')}_${selectedPeriod}_${date}`;
+    
+    // Download based on format
+    if (format === 'PDF') {
+      downloadAsPDF(reportContent, filename);
+    } else if (format === 'Excel') {
+      downloadAsExcel(reportContent, filename);
+    } else if (format === 'CSV') {
+      downloadAsCSV(reportContent, filename);
+    }
   };
 
-  const handleDownloadReport = (reportName) => {
-    alert(`⬇️ Downloading: ${reportName}\n\nThis would download the actual file in production!`);
+  const handleDownloadReport = (report) => {
+    // Generate content for existing report
+    const reportContent = generateReportContent(report.name, report.platforms.join(', '));
+    
+    // Download based on format
+    if (report.format === 'PDF') {
+      downloadAsPDF(reportContent, report.name.replace(/\s+/g, '_'));
+    } else if (report.format === 'Excel') {
+      downloadAsExcel(reportContent, report.name.replace(/\s+/g, '_'));
+    } else {
+      downloadAsCSV(reportContent, report.name.replace(/\s+/g, '_'));
+    }
+  };
+
+  // Generate report content
+  const generateReportContent = (reportName, platforms) => {
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
+    
+    return {
+      title: reportName,
+      generatedDate: date,
+      generatedTime: time,
+      period: selectedPeriod.toUpperCase(),
+      platforms: platforms,
+      data: [
+        { platform: 'Facebook', followers: 1987, engagement: 87, likes: 52, views: 87 },
+        { platform: 'Twitter', followers: 1044, engagement: 117, likes: 507, views: 553 },
+        { platform: 'Instagram', followers: 11734, engagement: 5462, likes: 5462, views: 52306 },
+        { platform: 'YouTube', followers: 8239, engagement: 1407, likes: 107, views: 1407 }
+      ],
+      summary: {
+        totalFollowers: 23004,
+        avgEngagement: 1768.25,
+        topPlatform: 'Instagram',
+        growthRate: '+12.3%'
+      }
+    };
+  };
+
+  // Download as PDF (HTML-based PDF)
+  const downloadAsPDF = (content, filename) => {
+    const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>${content.title}</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+    h1 { color: #1e40af; border-bottom: 3px solid #3b82f6; padding-bottom: 10px; }
+    .meta { color: #64748b; margin-bottom: 30px; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background-color: #f1f5f9; color: #1e293b; font-weight: 600; }
+    .summary { background: #f8fafc; padding: 20px; border-radius: 8px; margin-top: 30px; }
+    .summary h2 { margin-top: 0; color: #334155; }
+    .stat { display: inline-block; margin: 10px 20px 10px 0; }
+    .stat-label { color: #64748b; font-size: 14px; }
+    .stat-value { color: #1e293b; font-size: 24px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>� ${content.title}</h1>
+  <div class="meta">
+    <strong>Generated:</strong> ${content.generatedDate} at ${content.generatedTime}<br>
+    <strong>Period:</strong> ${content.period}<br>
+    <strong>Platforms:</strong> ${content.platforms}
+  </div>
+  
+  <h2>Platform Performance</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Followers</th>
+        <th>Engagement</th>
+        <th>Likes</th>
+        <th>Views</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${content.data.map(row => `
+        <tr>
+          <td><strong>${row.platform}</strong></td>
+          <td>${row.followers.toLocaleString()}</td>
+          <td>${row.engagement.toLocaleString()}</td>
+          <td>${row.likes.toLocaleString()}</td>
+          <td>${row.views.toLocaleString()}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+  
+  <div class="summary">
+    <h2>Executive Summary</h2>
+    <div class="stat">
+      <div class="stat-label">Total Followers</div>
+      <div class="stat-value">${content.summary.totalFollowers.toLocaleString()}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Avg Engagement</div>
+      <div class="stat-value">${content.summary.avgEngagement.toLocaleString()}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Top Platform</div>
+      <div class="stat-value">${content.summary.topPlatform}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Growth Rate</div>
+      <div class="stat-value">${content.summary.growthRate}</div>
+    </div>
+  </div>
+  
+  <p style="margin-top: 40px; color: #94a3b8; font-size: 12px;">
+    This report was automatically generated by Social Media Dashboard<br>
+    For questions, contact your analytics team
+  </p>
+</body>
+</html>`;
+    
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert(`✅ Report downloaded as HTML!\n\n📄 ${filename}.html\n\nOpen this file in your browser and use Print > Save as PDF to create a PDF file.`);
+  };
+
+  // Download as Excel (CSV format for Excel)
+  const downloadAsExcel = (content, filename) => {
+    const csvContent = [
+      [`Social Media Report - ${content.title}`],
+      [`Generated: ${content.generatedDate} at ${content.generatedTime}`],
+      [`Period: ${content.period}`],
+      [`Platforms: ${content.platforms}`],
+      [],
+      ['Platform', 'Followers', 'Engagement', 'Likes', 'Views'],
+      ...content.data.map(row => [
+        row.platform,
+        row.followers,
+        row.engagement,
+        row.likes,
+        row.views
+      ]),
+      [],
+      ['Summary'],
+      ['Total Followers', content.summary.totalFollowers],
+      ['Average Engagement', content.summary.avgEngagement],
+      ['Top Platform', content.summary.topPlatform],
+      ['Growth Rate', content.summary.growthRate]
+    ].map(row => row.join(',')).join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert(`✅ Report downloaded as CSV!\n\n📄 ${filename}.csv\n\nOpen this file in Excel or Google Sheets.`);
+  };
+
+  // Download as CSV
+  const downloadAsCSV = (content, filename) => {
+    const csvContent = [
+      ['Platform', 'Followers', 'Engagement', 'Likes', 'Views'],
+      ...content.data.map(row => [
+        row.platform,
+        row.followers,
+        row.engagement,
+        row.likes,
+        row.views
+      ])
+    ].map(row => row.join(',')).join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert(`✅ Report downloaded!\n\n📄 ${filename}.csv`);
   };
 
   const togglePlatform = (platformId) => {
@@ -545,7 +752,7 @@ function ReportsPage() {
 
                   {/* Download Button */}
                   <button
-                    onClick={() => handleDownloadReport(report.name)}
+                    onClick={() => handleDownloadReport(report)}
                     style={{
                       padding: '0.75rem 1.5rem',
                       borderRadius: '0.5rem',
