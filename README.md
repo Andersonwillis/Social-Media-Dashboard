@@ -1,8 +1,13 @@
 # Social Media Dashboard with Theme Switcher
 
-A full-stack social media analytics dashboard built with React, Express, and a theme switcher feature. This project is based on a [Frontend Mentor](https://www.frontendmentor.io) challenge, enhanced with a backend API and persistent data storage.
+## 🚀 Live Demo
 
-![Design preview](other/preview.jpg)
+**Frontend**: https://social-media-dashboard-kappa-rosy.vercel.app  
+**Backend API**: https://social-media-dashboard-production-7619.up.railway.app
+
+---
+
+A full-stack social media analytics dashboard built with React, Express, and a theme switcher feature. This project is based on a [Frontend Mentor](https://www.frontendmentor.io) challenge, enhanced with a backend API and persistent data storage.
 
 ## 📋 Table of Contents
 
@@ -26,9 +31,6 @@ This dashboard displays social media statistics across multiple platforms (Faceb
 - Responsive design for mobile and desktop
 - RESTful API backend with persistent JSON storage
 - Editable statistics via API endpoints
-
-**Live Demo**: https://social-media-dashboard-kappa-rosy.vercel.app  
-**API Endpoint**: https://social-media-dashboard-production-7619.up.railway.app
 
 ---
 
