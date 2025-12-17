@@ -60,10 +60,10 @@
       "id": "fb-shares",
       "brand": "facebook",
       "metric": "Shares",
-      "value": 744,
+      "value": 745,
       "deltaDirection": "up",
       "deltaPercent": 15,
-      "count": 744
+      "count": 745
     },
     {
       "id": "fb-comments",
