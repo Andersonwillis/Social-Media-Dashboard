@@ -1,0 +1,4 @@
+# Railway ignore file
+# This file forces Railway to check for changes
+node_modules/
+.DS_Store
