@@ -25,8 +25,14 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+  exposedHeaders: ['set-cookie']
 }));
+
+// Additional CORS headers for preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -70,6 +76,13 @@ app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 // CSRF Token endpoint - allows clients to fetch the token
 app.get('/api/csrf-token', (req, res) => {
+  // Explicitly set CORS headers for this endpoint
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+  }
+  
   const csrfToken = generateToken(req, res);
   res.json({ csrfToken });
 });
@@ -157,7 +170,7 @@ initDB().then(() => {
     console.log('='.repeat(60));
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔐 CORS allowed origin: ${allowedOrigin}`);
+    console.log(`🔐 CORS allowed origins: ${allowedOrigins.join(', ')}`);
     console.log(`📡 Available endpoints:`);
     console.log(`   GET  /api/health`);
     console.log(`   GET  /api/csrf-token`);
