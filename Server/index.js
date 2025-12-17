@@ -7,9 +7,24 @@ import { doubleCsrf } from 'csrf-csrf';
 const app = express();
 
 // Configure CORS to allow requests from the frontend
-const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:5173';
+const allowedOrigins = [
+  'http://localhost:5173', // Local development
+  'https://social-media-dashboard-kappa-rosy.vercel.app', // Production Vercel
+  process.env.ALLOWED_ORIGIN // Custom origin from env variable
+].filter(Boolean);
+
 app.use(cors({
-  origin: allowedOrigin,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, Postman, or server-to-server)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
