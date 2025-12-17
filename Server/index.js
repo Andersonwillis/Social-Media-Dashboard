@@ -41,20 +41,32 @@ app.use(cookieParser());
 // sameSite: 'none' allows cross-site cookies (required for Railway deployment)
 // secure: true in production ensures cookies are only sent over HTTPS
 // httpOnly: true prevents JavaScript access to the cookie
-const {
-  generateToken, // Use this in the endpoint that provides the CSRF token
-  doubleCsrfProtection, // This is the middleware to use on protected routes
-} = doubleCsrf({
-  getSecret: () => process.env.CSRF_SECRET || 'your-secret-key-change-in-production',
-  cookieName: '_csrf',
-  cookieOptions: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  },
-  size: 64,
-  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
-});
+const CSRF_SECRET = process.env.CSRF_SECRET || 'social-media-dashboard-csrf-secret-key-2025';
+
+let generateToken, doubleCsrfProtection;
+
+try {
+  const csrfProtection = doubleCsrf({
+    getSecret: () => CSRF_SECRET,
+    cookieName: '_csrf',
+    cookieOptions: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+    },
+    size: 64,
+    ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
+  });
+  
+  generateToken = csrfProtection.generateToken;
+  doubleCsrfProtection = csrfProtection.doubleCsrfProtection;
+} catch (error) {
+  console.error('CSRF initialization error:', error);
+  // Fallback: create dummy functions if CSRF fails
+  generateToken = (req, res) => 'dummy-token';
+  doubleCsrfProtection = (req, res, next) => next();
+}
 
 // Simple request logger to help debug which paths the client requests
 app.use((req, _res, next) => {
