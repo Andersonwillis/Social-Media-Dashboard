@@ -13,7 +13,14 @@ export function useRole() {
   
   // Get role from user's public metadata
   // You'll need to set this in Clerk Dashboard under user metadata
-  const userRole = user?.publicMetadata?.role || ROLES.VIEWER;
+  // Temporary: Auto-assign admin role to admin@admin.com
+  let userRole = user?.publicMetadata?.role || ROLES.VIEWER;
+  
+  // Check if user email is admin@admin.com and grant admin access
+  const userEmail = user?.emailAddresses?.[0]?.emailAddress || user?.primaryEmailAddress?.emailAddress;
+  if (userEmail === 'admin@admin.com') {
+    userRole = ROLES.ADMIN;
+  }
   
   const hasRole = (role) => {
     if (!user) return false;
