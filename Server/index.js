@@ -37,21 +37,38 @@ app.options('*', cors());
 app.use(express.json());
 app.use(cookieParser());
 
-// CSRF Protection - Temporarily disabled for deployment
-// TODO: Re-enable CSRF protection after fixing Railway deployment issues
-// const CSRF_SECRET = process.env.CSRF_SECRET || 'social-media-dashboard-csrf-secret-key-2025';
+// Configure CSRF protection with proper error handling
+const CSRF_SECRET = process.env.CSRF_SECRET || 'social-media-dashboard-csrf-secret-2025-production';
 
-// Dummy CSRF functions (no actual protection - for development/demo only)
-const generateToken = (req, res) => {
-  return 'dummy-csrf-token-for-demo';
-};
+let generateToken, doubleCsrfProtection;
 
-const doubleCsrfProtection = (req, res, next) => {
-  // Skip CSRF validation
-  next();
-};
-
-console.log('⚠️  CSRF Protection: DISABLED (Demo Mode)');
+try {
+  // Initialize CSRF protection
+  const csrfMethods = doubleCsrf({
+    getSecret: () => CSRF_SECRET,
+    cookieName: '__Host-csrf',
+    cookieOptions: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+    },
+    size: 64,
+    ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
+  });
+  
+  generateToken = csrfMethods.generateToken;
+  doubleCsrfProtection = csrfMethods.doubleCsrfProtection;
+  
+  console.log('✅ CSRF Protection: ENABLED');
+} catch (error) {
+  console.error('❌ CSRF initialization failed:', error.message);
+  console.log('⚠️  Running without CSRF protection - FOR DEVELOPMENT ONLY');
+  
+  // Fallback functions
+  generateToken = (req, res) => 'fallback-token';
+  doubleCsrfProtection = (req, res, next) => next();
+}
 
 // Simple request logger to help debug which paths the client requests
 app.use((req, _res, next) => {
