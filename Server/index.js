@@ -16,14 +16,21 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
+    console.log(`📨 Request from origin: ${origin || 'NO ORIGIN'}`);
+    
     // Allow requests with no origin (like mobile apps, Postman, or server-to-server)
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      console.log('✅ Allowed: No origin (server-to-server or tool)');
+      return callback(null, true);
+    }
     
     // Check if origin is allowed or matches Vercel preview deployments
     if (allowedOrigins.includes(origin) || (origin && origin.includes('.vercel.app'))) {
+      console.log(`✅ Allowed origin: ${origin}`);
       callback(null, true);
     } else {
-      console.warn(`CORS blocked origin: ${origin}`);
+      console.warn(`❌ CORS BLOCKED origin: ${origin}`);
+      console.warn(`   Allowed origins: ${allowedOrigins.join(', ')}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -41,6 +48,7 @@ app.use(cookieParser());
 
 // Configure CSRF protection with proper error handling
 const CSRF_SECRET = process.env.CSRF_SECRET || 'social-media-dashboard-csrf-secret-2025-production';
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT === 'production';
 
 let generateToken, doubleCsrfProtection;
 
@@ -48,11 +56,11 @@ try {
   // Initialize CSRF protection
   const csrfMethods = doubleCsrf({
     getSecret: () => CSRF_SECRET,
-    cookieName: '__Host-csrf',
+    cookieName: '_csrf',
     cookieOptions: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
     },
     size: 64,
@@ -62,7 +70,7 @@ try {
   generateToken = csrfMethods.generateToken;
   doubleCsrfProtection = csrfMethods.doubleCsrfProtection;
   
-  console.log('✅ CSRF Protection: ENABLED');
+  console.log(`✅ CSRF Protection: ENABLED (Production: ${isProduction})`);
 } catch (error) {
   console.error('❌ CSRF initialization failed:', error.message);
   console.log('⚠️  Running without CSRF protection - FOR DEVELOPMENT ONLY');
