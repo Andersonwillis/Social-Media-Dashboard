@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
-import { getFollowers, getOverview } from '../api';
+import { getFollowers, getOverview, API_BASE } from '../api';
 
 export default function AnalyticsPage() {
   const { isSignedIn, isLoaded } = useAuth();
@@ -28,7 +28,7 @@ export default function AnalyticsPage() {
     
     const fetchAnalyticsData = async () => {
       try {
-        const response = await fetch(`http://localhost:5174/api/analytics?range=${timeRange}`);
+        const response = await fetch(`${API_BASE}/analytics?range=${timeRange}`);
         if (!response.ok) {
           throw new Error('Failed to fetch analytics data');
         }
