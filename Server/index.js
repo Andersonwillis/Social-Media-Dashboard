@@ -2,8 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { db, initDB } from './db.js';
-// Temporarily commented out to bypass CSRF issues
-// import { doubleCsrf } from 'csrf-csrf';
+import { doubleCsrf } from 'csrf-csrf';
 
 const app = express();
 
@@ -17,21 +16,14 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    console.log(`📨 Request from origin: ${origin || 'NO ORIGIN'}`);
-    
     // Allow requests with no origin (like mobile apps, Postman, or server-to-server)
-    if (!origin) {
-      console.log('✅ Allowed: No origin (server-to-server or tool)');
-      return callback(null, true);
-    }
+    if (!origin) return callback(null, true);
     
     // Check if origin is allowed or matches Vercel preview deployments
     if (allowedOrigins.includes(origin) || (origin && origin.includes('.vercel.app'))) {
-      console.log(`✅ Allowed origin: ${origin}`);
       callback(null, true);
     } else {
-      console.warn(`❌ CORS BLOCKED origin: ${origin}`);
-      console.warn(`   Allowed origins: ${allowedOrigins.join(', ')}`);
+      console.warn(`CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -47,15 +39,14 @@ app.options('*', cors());
 app.use(express.json());
 app.use(cookieParser());
 
-// CSRF protection completely disabled for now to diagnose CORS issues
-// TODO: Re-implement CSRF properly after fixing CORS
-/*
+// Configure CSRF protection with proper error handling
 const CSRF_SECRET = process.env.CSRF_SECRET || 'social-media-dashboard-csrf-secret-2025-production';
 const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT === 'production';
 
 let generateToken, doubleCsrfProtection;
 
 try {
+  // Initialize CSRF protection with invalidOnFalse: false to prevent errors during token generation
   const csrfMethods = doubleCsrf({
     getSecret: () => CSRF_SECRET,
     cookieName: '_csrf',
@@ -78,12 +69,10 @@ try {
   console.error('❌ CSRF initialization failed:', error.message);
   console.log('⚠️  Running without CSRF protection - FOR DEVELOPMENT ONLY');
   
+  // Fallback functions
   generateToken = (req, res) => 'fallback-token';
   doubleCsrfProtection = (req, res, next) => next();
 }
-*/
-
-console.log('⚠️  CSRF Protection: TEMPORARILY DISABLED for debugging');
 
 // Simple request logger to help debug which paths the client requests
 app.use((req, _res, next) => {
@@ -104,18 +93,9 @@ app.use((req, _res, next) => {
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 // CSRF Token endpoint - allows clients to fetch the token
-// Temporary: Return a simple token without CSRF validation to test
 app.get('/api/csrf-token', (req, res) => {
-  console.log('🔐 CSRF token requested');
-  console.log(`   Origin: ${req.headers.origin || 'NO ORIGIN'}`);
-  console.log(`   Referer: ${req.headers.referer || 'NO REFERER'}`);
-  
-  // For now, return a simple static token to bypass CSRF issues
-  // TODO: Re-enable proper CSRF after fixing CORS
-  const simpleToken = 'temporary-bypass-token-' + Date.now();
-  console.log(`✅ Returning bypass token: ${simpleToken}`);
-  
-  res.json({ csrfToken: simpleToken });
+  const csrfToken = generateToken(req, res);
+  res.json({ csrfToken });
 });
 
 // Followers
@@ -124,10 +104,7 @@ app.get('/api/followers', async (_req, res) => {
   res.json(db.data.followers);
 });
 
-// Temporary: Disable CSRF protection to test if that's the issue
-// TODO: Re-enable doubleCsrfProtection after fixing CORS
-app.patch('/api/followers/:id', async (req, res) => {
-  console.log(`📝 PATCH /api/followers/${req.params.id} from origin: ${req.headers.origin}`);
+app.patch('/api/followers/:id', doubleCsrfProtection, async (req, res) => {
   const { id } = req.params;
   const patch = req.body;
   await db.read();
@@ -144,10 +121,7 @@ app.get('/api/overview', async (_req, res) => {
   res.json(db.data.overview);
 });
 
-// Temporary: Disable CSRF protection to test if that's the issue
-// TODO: Re-enable doubleCsrfProtection after fixing CORS
-app.patch('/api/overview/:id', async (req, res) => {
-  console.log(`📝 PATCH /api/overview/${req.params.id} from origin: ${req.headers.origin}`);
+app.patch('/api/overview/:id', doubleCsrfProtection, async (req, res) => {
   const { id } = req.params;
   const patch = req.body;
   await db.read();
