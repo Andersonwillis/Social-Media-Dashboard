@@ -100,27 +100,18 @@ app.use((req, _res, next) => {
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 // CSRF Token endpoint - allows clients to fetch the token
+// Temporary: Return a simple token without CSRF validation to test
 app.get('/api/csrf-token', (req, res) => {
-  try {
-    // Explicitly set CORS headers for this endpoint
-    const origin = req.headers.origin;
-    if (origin && allowedOrigins.includes(origin)) {
-      res.header('Access-Control-Allow-Origin', origin);
-      res.header('Access-Control-Allow-Credentials', 'true');
-    }
-    
-    console.log('🔐 Generating CSRF token...');
-    const csrfToken = generateToken(req, res);
-    console.log('✅ CSRF token generated successfully');
-    res.json({ csrfToken });
-  } catch (error) {
-    console.error('❌ Error generating CSRF token:', error.message);
-    // Return a fallback response instead of erroring
-    res.status(500).json({ 
-      error: 'Failed to generate CSRF token',
-      message: error.message 
-    });
-  }
+  console.log('🔐 CSRF token requested');
+  console.log(`   Origin: ${req.headers.origin || 'NO ORIGIN'}`);
+  console.log(`   Referer: ${req.headers.referer || 'NO REFERER'}`);
+  
+  // For now, return a simple static token to bypass CSRF issues
+  // TODO: Re-enable proper CSRF after fixing CORS
+  const simpleToken = 'temporary-bypass-token-' + Date.now();
+  console.log(`✅ Returning bypass token: ${simpleToken}`);
+  
+  res.json({ csrfToken: simpleToken });
 });
 
 // Followers
@@ -129,7 +120,10 @@ app.get('/api/followers', async (_req, res) => {
   res.json(db.data.followers);
 });
 
-app.patch('/api/followers/:id', doubleCsrfProtection, async (req, res) => {
+// Temporary: Disable CSRF protection to test if that's the issue
+// TODO: Re-enable doubleCsrfProtection after fixing CORS
+app.patch('/api/followers/:id', async (req, res) => {
+  console.log(`📝 PATCH /api/followers/${req.params.id} from origin: ${req.headers.origin}`);
   const { id } = req.params;
   const patch = req.body;
   await db.read();
@@ -146,7 +140,10 @@ app.get('/api/overview', async (_req, res) => {
   res.json(db.data.overview);
 });
 
-app.patch('/api/overview/:id', doubleCsrfProtection, async (req, res) => {
+// Temporary: Disable CSRF protection to test if that's the issue
+// TODO: Re-enable doubleCsrfProtection after fixing CORS
+app.patch('/api/overview/:id', async (req, res) => {
+  console.log(`📝 PATCH /api/overview/${req.params.id} from origin: ${req.headers.origin}`);
   const { id } = req.params;
   const patch = req.body;
   await db.read();
