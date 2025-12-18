@@ -3,6 +3,8 @@ export const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 // Cache for CSRF token
 let csrfToken = null;
 
+// Note: API_BASE is configured via VITE_API_BASE environment variable in Vercel
+
 // Fetch CSRF token from server
 async function getCsrfToken() {
   if (csrfToken) return csrfToken;
