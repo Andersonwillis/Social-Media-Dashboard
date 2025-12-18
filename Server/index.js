@@ -53,7 +53,7 @@ const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWA
 let generateToken, doubleCsrfProtection;
 
 try {
-  // Initialize CSRF protection
+  // Initialize CSRF protection with invalidOnFalse: false to prevent errors during token generation
   const csrfMethods = doubleCsrf({
     getSecret: () => CSRF_SECRET,
     cookieName: '_csrf',
@@ -65,6 +65,7 @@ try {
     },
     size: 64,
     ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
+    getTokenFromRequest: (req) => req.headers['x-csrf-token'],
   });
   
   generateToken = csrfMethods.generateToken;
@@ -100,15 +101,26 @@ app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 // CSRF Token endpoint - allows clients to fetch the token
 app.get('/api/csrf-token', (req, res) => {
-  // Explicitly set CORS headers for this endpoint
-  const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Credentials', 'true');
+  try {
+    // Explicitly set CORS headers for this endpoint
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+      res.header('Access-Control-Allow-Credentials', 'true');
+    }
+    
+    console.log('🔐 Generating CSRF token...');
+    const csrfToken = generateToken(req, res);
+    console.log('✅ CSRF token generated successfully');
+    res.json({ csrfToken });
+  } catch (error) {
+    console.error('❌ Error generating CSRF token:', error.message);
+    // Return a fallback response instead of erroring
+    res.status(500).json({ 
+      error: 'Failed to generate CSRF token',
+      message: error.message 
+    });
   }
-  
-  const csrfToken = generateToken(req, res);
-  res.json({ csrfToken });
 });
 
 // Followers
