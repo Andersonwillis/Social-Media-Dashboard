@@ -9,6 +9,7 @@ const app = express();
 // Configure CORS to allow requests from the frontend
 const allowedOrigins = [
   'http://localhost:5173', // Local development
+  'http://localhost:5174', // Local development (alternative port)
   'https://social-media-dashboard-kappa-rosy.vercel.app', // Production Vercel
   process.env.ALLOWED_ORIGIN // Custom origin from env variable
 ].filter(Boolean);
@@ -18,7 +19,8 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps, Postman, or server-to-server)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes(origin)) {
+    // Check if origin is allowed or matches Vercel preview deployments
+    if (allowedOrigins.includes(origin) || (origin && origin.includes('.vercel.app'))) {
       callback(null, true);
     } else {
       console.warn(`CORS blocked origin: ${origin}`);
