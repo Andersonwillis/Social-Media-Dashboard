@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { db, initDB } from './db.js';
-import { doubleCsrf } from 'csrf-csrf';
+// Temporarily commented out to bypass CSRF issues
+// import { doubleCsrf } from 'csrf-csrf';
 
 const app = express();
 
@@ -46,14 +47,15 @@ app.options('*', cors());
 app.use(express.json());
 app.use(cookieParser());
 
-// Configure CSRF protection with proper error handling
+// CSRF protection completely disabled for now to diagnose CORS issues
+// TODO: Re-implement CSRF properly after fixing CORS
+/*
 const CSRF_SECRET = process.env.CSRF_SECRET || 'social-media-dashboard-csrf-secret-2025-production';
 const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT === 'production';
 
 let generateToken, doubleCsrfProtection;
 
 try {
-  // Initialize CSRF protection with invalidOnFalse: false to prevent errors during token generation
   const csrfMethods = doubleCsrf({
     getSecret: () => CSRF_SECRET,
     cookieName: '_csrf',
@@ -76,10 +78,12 @@ try {
   console.error('❌ CSRF initialization failed:', error.message);
   console.log('⚠️  Running without CSRF protection - FOR DEVELOPMENT ONLY');
   
-  // Fallback functions
   generateToken = (req, res) => 'fallback-token';
   doubleCsrfProtection = (req, res, next) => next();
 }
+*/
+
+console.log('⚠️  CSRF Protection: TEMPORARILY DISABLED for debugging');
 
 // Simple request logger to help debug which paths the client requests
 app.use((req, _res, next) => {
